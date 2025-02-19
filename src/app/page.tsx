@@ -1,8 +1,11 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Box } from "@mui/material";
 
-function Home() {
-  <div>hello</div>
+const Home = () => {
+  return(
+    <Box>
+      aaa
+    </Box>
+  )
 }
 
 export default Home
