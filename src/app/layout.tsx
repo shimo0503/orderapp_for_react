@@ -25,6 +25,7 @@ import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FormatAlignJustifyOutlinedIcon from '@mui/icons-material/FormatAlignJustifyOutlined';
+import { useState, useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isMobile, setIsMobile] = useState(false);
+
+    // レスポンシブデザインに基づいて画面幅を検出
+    const checkIfMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+    };
+
+    useEffect(() => {
+        // 初期の画面幅に基づいて状態を設定
+        checkIfMobile();
+
+        // 画面サイズが変更されたときに再チェック
+        window.addEventListener('resize', checkIfMobile);
+        
+        // コンポーネントがアンマウントされる時にイベントリスナーを削除
+        return () => {
+            window.removeEventListener('resize', checkIfMobile);
+        };
+    }, []);
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -46,53 +66,55 @@ export default function RootLayout({
           <Box sx={{ display: "flex" }}>
             <CssBaseline />
             <AppBar
-              position="fixed"
-              sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            >
-              <Toolbar>
-                <Typography variant="h6" noWrap component="div">
-                  instant order
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <Drawer
-              variant="permanent"
-              sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: {
+                position="fixed"
+                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              >
+                <Toolbar>
+                  <Typography variant="h6" noWrap component="div">
+                    <Link href='/'>instant order</Link>
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+            {!isMobile && (
+              <Drawer
+                variant="permanent"
+                sx={{
                   width: drawerWidth,
-                  boxSizing: "border-box",
-                },
-              }}
-            >
-              <Toolbar />
-              <Box sx={{ overflow: "auto" }}>
-                <List>
+                  flexShrink: 0,
+                  [`& .MuiDrawer-paper`]: {
+                    width: drawerWidth,
+                    boxSizing: "border-box",
+                  },
+                }}
+              >
+                <Toolbar />
+                <Box sx={{ overflow: "auto" }}>
                   {SidebarData.map(
                     (item, index) => (
-                      <Link href={item.link}>
-                        <ListItem key={index}>
-                          <ListItemButton>
-                            <ListItemIcon>
-                              {
-                                item.icon === "home" ? <HomeOutlinedIcon/> :
-                                item.icon === "meal" ? <LocalDiningOutlinedIcon/> :
-                                item.icon === "prod" ? <LocalMallOutlinedIcon/> :
-                                item.icon === "sale" ? <AttachMoneyOutlinedIcon/> :
-                                item.icon === "pay" ? <PaymentOutlinedIcon/> :
-                                <FormatAlignJustifyOutlinedIcon/>
-                              }
-                            </ListItemIcon>
-                            <ListItemText primary={item.title} />
-                          </ListItemButton>
-                        </ListItem>
+                      <Link href={item.link} key={index}>
+                        <List key={index}>
+                          <ListItem key={index}>
+                            <ListItemButton key={index}>
+                              <ListItemIcon>
+                                {
+                                  item.icon === "home" ? <HomeOutlinedIcon/> :
+                                  item.icon === "meal" ? <LocalDiningOutlinedIcon/> :
+                                  item.icon === "prod" ? <LocalMallOutlinedIcon/> :
+                                  item.icon === "sale" ? <AttachMoneyOutlinedIcon/> :
+                                  item.icon === "pay" ? <PaymentOutlinedIcon/> :
+                                  <FormatAlignJustifyOutlinedIcon/>
+                                }
+                              </ListItemIcon>
+                              <ListItemText primary={item.title} />
+                            </ListItemButton>
+                          </ListItem>
+                        </List>
                       </Link>
                     )
                   )}
-                </List>
-              </Box>
-            </Drawer>
+                </Box>
+              </Drawer>
+            )}
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <Toolbar />
 
