@@ -10,9 +10,14 @@ export default defineConfig({
             client: 'react-query',
             schemas: './src/generated/backend/model',
             mode: 'tags-split',
-            baseUrl: process.env.NEXT_PUBLIC_API_URL,
             clean: true,
-            prettier: true
+            prettier: true,
+            override: {
+                mutator: {
+                    path: './src/mutator/custom-instance.ts',
+                    name: 'customInstance'
+                }
+            }
         }
     }
 })

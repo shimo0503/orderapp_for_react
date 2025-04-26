@@ -23,13 +23,6 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query';
 
-import axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
 import type {
   GetApiProduct200,
   PostApiProduct200,
@@ -38,36 +31,41 @@ import type {
   RegisterSchema
 } from '.././model';
 
+import { customInstance } from '../../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
 export const getApiProduct = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetApiProduct200>> => {
     
-    
-    return axios.get(
-      `/api/product`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetApiProduct200>(
+      {url: `/api/product`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetApiProductQueryKey = () => {
     return [`/api/product`] as const;
     }
 
     
-export const getGetApiProductQueryOptions = <TData = Awaited<ReturnType<typeof getApiProduct>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetApiProductQueryOptions = <TData = Awaited<ReturnType<typeof getApiProduct>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiProductQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiProduct>>> = ({ signal }) => getApiProduct({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiProduct>>> = ({ signal }) => getApiProduct(requestOptions, signal);
 
       
 
@@ -77,36 +75,36 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetApiProductQueryResult = NonNullable<Awaited<ReturnType<typeof getApiProduct>>>
-export type GetApiProductQueryError = AxiosError<unknown>
+export type GetApiProductQueryError = unknown
 
 
-export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = AxiosError<unknown>>(
+export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = unknown>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiProduct>>,
           TError,
           Awaited<ReturnType<typeof getApiProduct>>
         > , 'initialData'
-      >, axios?: AxiosRequestConfig}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = AxiosError<unknown>>(
+export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiProduct>>,
           TError,
           Awaited<ReturnType<typeof getApiProduct>>
         > , 'initialData'
-      >, axios?: AxiosRequestConfig}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = AxiosError<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = AxiosError<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -125,32 +123,35 @@ export function useGetApiProduct<TData = Awaited<ReturnType<typeof getApiProduct
  * @summary Get products with condition (e.g. provided)
  */
 export const postApiProduct = (
-    postApiProductBody: PostApiProductBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<PostApiProduct200>> => {
-    
-    const formData = new FormData();
+    postApiProductBody: PostApiProductBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
 if(postApiProductBody.provided !== undefined) {
  formData.append('provided', postApiProductBody.provided.toString())
  }
 
-    return axios.post(
-      `/api/product`,
-      formData,options
-    );
-  }
+      return customInstance<PostApiProduct200>(
+      {url: `/api/product`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiProductMutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProduct>>, TError,{data: PostApiProductBody}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiProductMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProduct>>, TError,{data: PostApiProductBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiProduct>>, TError,{data: PostApiProductBody}, TContext> => {
     
 const mutationKey = ['postApiProduct'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -158,7 +159,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiProduct>>, {data: PostApiProductBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiProduct(data,axiosOptions)
+          return  postApiProduct(data,requestOptions)
         }
 
         
@@ -168,13 +169,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiProductMutationResult = NonNullable<Awaited<ReturnType<typeof postApiProduct>>>
     export type PostApiProductMutationBody = PostApiProductBody
-    export type PostApiProductMutationError = AxiosError<unknown>
+    export type PostApiProductMutationError = unknown
 
     /**
  * @summary Get products with condition (e.g. provided)
  */
-export const usePostApiProduct = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProduct>>, TError,{data: PostApiProductBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiProduct = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProduct>>, TError,{data: PostApiProductBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiProduct>>,
         TError,
@@ -190,31 +191,34 @@ export const usePostApiProduct = <TError = AxiosError<unknown>,
  * @summary Register or update product stock
  */
 export const postApiRest = (
-    postApiRestBody: PostApiRestBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<RegisterSchema>> => {
-    
-    const formData = new FormData();
+    postApiRestBody: PostApiRestBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
 formData.append('name', postApiRestBody.name)
 formData.append('rest', postApiRestBody.rest.toString())
 
-    return axios.post(
-      `/api/rest`,
-      formData,options
-    );
-  }
+      return customInstance<RegisterSchema>(
+      {url: `/api/rest`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiRestMutationOptions = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRest>>, TError,{data: PostApiRestBody}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiRestMutationOptions = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRest>>, TError,{data: PostApiRestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiRest>>, TError,{data: PostApiRestBody}, TContext> => {
     
 const mutationKey = ['postApiRest'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -222,7 +226,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiRest>>, {data: PostApiRestBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiRest(data,axiosOptions)
+          return  postApiRest(data,requestOptions)
         }
 
         
@@ -232,13 +236,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiRestMutationResult = NonNullable<Awaited<ReturnType<typeof postApiRest>>>
     export type PostApiRestMutationBody = PostApiRestBody
-    export type PostApiRestMutationError = AxiosError<RegisterSchema>
+    export type PostApiRestMutationError = RegisterSchema
 
     /**
  * @summary Register or update product stock
  */
-export const usePostApiRest = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRest>>, TError,{data: PostApiRestBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiRest = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRest>>, TError,{data: PostApiRestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiRest>>,
         TError,

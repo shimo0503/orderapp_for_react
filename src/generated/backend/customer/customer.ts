@@ -23,20 +23,16 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query';
 
-import axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
 import type {
   GetApiCustomer200,
   PostApiPayBody,
   RegisterSchema
 } from '.././model';
 
+import { customInstance } from '../../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -44,30 +40,33 @@ import type {
  * @summary Pay for a table
  */
 export const postApiPay = (
-    postApiPayBody: PostApiPayBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<RegisterSchema>> => {
-    
-    const formData = new FormData();
+    postApiPayBody: PostApiPayBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
 formData.append('table_number', postApiPayBody.table_number.toString())
 
-    return axios.post(
-      `/api/pay`,
-      formData,options
-    );
-  }
+      return customInstance<RegisterSchema>(
+      {url: `/api/pay`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiPayMutationOptions = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiPayMutationOptions = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext> => {
     
 const mutationKey = ['postApiPay'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -75,7 +74,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiPay>>, {data: PostApiPayBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiPay(data,axiosOptions)
+          return  postApiPay(data,requestOptions)
         }
 
         
@@ -85,13 +84,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiPayMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPay>>>
     export type PostApiPayMutationBody = PostApiPayBody
-    export type PostApiPayMutationError = AxiosError<RegisterSchema>
+    export type PostApiPayMutationError = RegisterSchema
 
     /**
  * @summary Pay for a table
  */
-export const usePostApiPay = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiPay = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiPay>>,
         TError,
@@ -107,31 +106,33 @@ export const usePostApiPay = <TError = AxiosError<RegisterSchema>,
  * @summary Get all customers
  */
 export const getApiCustomer = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetApiCustomer200>> => {
     
-    
-    return axios.get(
-      `/api/customer`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetApiCustomer200>(
+      {url: `/api/customer`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetApiCustomerQueryKey = () => {
     return [`/api/customer`] as const;
     }
 
     
-export const getGetApiCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetApiCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetApiCustomerQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCustomer>>> = ({ signal }) => getApiCustomer({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiCustomer>>> = ({ signal }) => getApiCustomer(requestOptions, signal);
 
       
 
@@ -141,39 +142,39 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetApiCustomerQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCustomer>>>
-export type GetApiCustomerQueryError = AxiosError<unknown>
+export type GetApiCustomerQueryError = unknown
 
 
-export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = unknown>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCustomer>>,
           TError,
           Awaited<ReturnType<typeof getApiCustomer>>
         > , 'initialData'
-      >, axios?: AxiosRequestConfig}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = unknown>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCustomer>>,
           TError,
           Awaited<ReturnType<typeof getApiCustomer>>
         > , 'initialData'
-      >, axios?: AxiosRequestConfig}
+      >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get all customers
  */
 
-export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 

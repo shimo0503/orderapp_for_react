@@ -14,20 +14,16 @@ import type {
   UseMutationResult
 } from '@tanstack/react-query';
 
-import axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
 import type {
   PostApiMenuNewBody,
   PostApiOrderAddBody,
   RegisterSchema
 } from '.././model';
 
+import { customInstance } from '../../../mutator/custom-instance';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -35,10 +31,11 @@ import type {
  * @summary Create a new menu item
  */
 export const postApiMenuNew = (
-    postApiMenuNewBody: PostApiMenuNewBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<RegisterSchema>> => {
-    
-    const formData = new FormData();
+    postApiMenuNewBody: PostApiMenuNewBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
 if(postApiMenuNewBody.name !== undefined) {
  formData.append('name', postApiMenuNewBody.name)
  }
@@ -52,24 +49,26 @@ if(postApiMenuNewBody.rest !== undefined) {
  formData.append('rest', postApiMenuNewBody.rest.toString())
  }
 
-    return axios.post(
-      `/api/Menu/new`,
-      formData,options
-    );
-  }
+      return customInstance<RegisterSchema>(
+      {url: `/api/Menu/new`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiMenuNewMutationOptions = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMenuNew>>, TError,{data: PostApiMenuNewBody}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiMenuNewMutationOptions = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMenuNew>>, TError,{data: PostApiMenuNewBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiMenuNew>>, TError,{data: PostApiMenuNewBody}, TContext> => {
     
 const mutationKey = ['postApiMenuNew'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -77,7 +76,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiMenuNew>>, {data: PostApiMenuNewBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiMenuNew(data,axiosOptions)
+          return  postApiMenuNew(data,requestOptions)
         }
 
         
@@ -87,13 +86,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiMenuNewMutationResult = NonNullable<Awaited<ReturnType<typeof postApiMenuNew>>>
     export type PostApiMenuNewMutationBody = PostApiMenuNewBody
-    export type PostApiMenuNewMutationError = AxiosError<RegisterSchema>
+    export type PostApiMenuNewMutationError = RegisterSchema
 
     /**
  * @summary Create a new menu item
  */
-export const usePostApiMenuNew = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMenuNew>>, TError,{data: PostApiMenuNewBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiMenuNew = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMenuNew>>, TError,{data: PostApiMenuNewBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiMenuNew>>,
         TError,
@@ -109,28 +108,31 @@ export const usePostApiMenuNew = <TError = AxiosError<RegisterSchema>,
  * @summary Create new order (raw input, unclear format)
  */
 export const postApiOrderNew = (
-    postApiOrderNewBody: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<RegisterSchema>> => {
-    
-    
-    return axios.post(
-      `/api/order/new`,
-      postApiOrderNewBody,options
-    );
-  }
+    postApiOrderNewBody: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<RegisterSchema>(
+      {url: `/api/order/new`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiOrderNewBody, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiOrderNewMutationOptions = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderNew>>, TError,{data: string}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiOrderNewMutationOptions = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderNew>>, TError,{data: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiOrderNew>>, TError,{data: string}, TContext> => {
     
 const mutationKey = ['postApiOrderNew'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -138,7 +140,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiOrderNew>>, {data: string}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiOrderNew(data,axiosOptions)
+          return  postApiOrderNew(data,requestOptions)
         }
 
         
@@ -148,13 +150,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiOrderNewMutationResult = NonNullable<Awaited<ReturnType<typeof postApiOrderNew>>>
     export type PostApiOrderNewMutationBody = string
-    export type PostApiOrderNewMutationError = AxiosError<RegisterSchema>
+    export type PostApiOrderNewMutationError = RegisterSchema
 
     /**
  * @summary Create new order (raw input, unclear format)
  */
-export const usePostApiOrderNew = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderNew>>, TError,{data: string}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiOrderNew = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderNew>>, TError,{data: string}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiOrderNew>>,
         TError,
@@ -170,28 +172,31 @@ export const usePostApiOrderNew = <TError = AxiosError<RegisterSchema>,
  * @summary Add detailed order
  */
 export const postApiOrderAdd = (
-    postApiOrderAddBody: PostApiOrderAddBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<RegisterSchema>> => {
-    
-    
-    return axios.post(
-      `/api/order/add`,
-      postApiOrderAddBody,options
-    );
-  }
+    postApiOrderAddBody: PostApiOrderAddBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<RegisterSchema>(
+      {url: `/api/order/add`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiOrderAddBody, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getPostApiOrderAddMutationOptions = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderAdd>>, TError,{data: PostApiOrderAddBody}, TContext>, axios?: AxiosRequestConfig}
+export const getPostApiOrderAddMutationOptions = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderAdd>>, TError,{data: PostApiOrderAddBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiOrderAdd>>, TError,{data: PostApiOrderAddBody}, TContext> => {
     
 const mutationKey = ['postApiOrderAdd'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -199,7 +204,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiOrderAdd>>, {data: PostApiOrderAddBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postApiOrderAdd(data,axiosOptions)
+          return  postApiOrderAdd(data,requestOptions)
         }
 
         
@@ -209,13 +214,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiOrderAddMutationResult = NonNullable<Awaited<ReturnType<typeof postApiOrderAdd>>>
     export type PostApiOrderAddMutationBody = PostApiOrderAddBody
-    export type PostApiOrderAddMutationError = AxiosError<RegisterSchema>
+    export type PostApiOrderAddMutationError = RegisterSchema
 
     /**
  * @summary Add detailed order
  */
-export const usePostApiOrderAdd = <TError = AxiosError<RegisterSchema>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderAdd>>, TError,{data: PostApiOrderAddBody}, TContext>, axios?: AxiosRequestConfig}
+export const usePostApiOrderAdd = <TError = RegisterSchema,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiOrderAdd>>, TError,{data: PostApiOrderAddBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiOrderAdd>>,
         TError,
