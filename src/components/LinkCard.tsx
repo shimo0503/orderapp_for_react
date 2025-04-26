@@ -1,4 +1,5 @@
-import { Card, CardHeader, CardContent, Typography } from "@mui/material"
+import { Card, CardHeader } from "@mui/material"
+import { red } from "@mui/material/colors"
 import Link from "next/link"
 
 type LinkCardProps = {
@@ -12,7 +13,18 @@ const LinkCard = (props: LinkCardProps) => {
     const index = props.index
     return (
         <Link href={link}>
-            <Card key={index}>
+            <Card
+            key={index}
+            variant="outlined"
+            sx={
+                {
+                    mt: '1',
+                    mb: '1',
+                    textAlign: 'center',
+                    backgroundColor: '#b9f8eb'
+                }
+            }
+            >
                 <CardHeader title={title} key={index}>
                 </CardHeader>
             </Card>

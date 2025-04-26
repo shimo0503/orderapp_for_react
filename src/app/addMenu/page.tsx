@@ -1,10 +1,10 @@
 'use client'
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import { Box, Button, ListItem, Stack, TextField, Typography } from "@mui/material"
 import { usePostApiMenuNew } from "@/generated/backend/menu/menu"
 import { PostApiMenuNewBody } from "@/generated/backend/model"
 import z from 'zod'
-import { zodResolver, SubmitHandler } from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 // スキーマ
 const Schema = z.object({
@@ -13,8 +13,8 @@ const Schema = z.object({
 })
 
 const AddMenu = () => {
-    const { data, mutate, isPending, error } = usePostApiMenuNew()
-    const { register, handleSubmit, formState: { errors } } = useForm<params>({
+    const { data, mutate, isPending } = usePostApiMenuNew()
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(Schema)
     })
     const handleSubmitPost: SubmitHandler<params> = (formData:PostApiMenuNewBody ) => {

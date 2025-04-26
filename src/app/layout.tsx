@@ -15,7 +15,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
 } from "@mui/material";
 import SidebarData from "@/components/SidebarData";
 import Link from "next/link";
@@ -26,6 +25,7 @@ import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FormatAlignJustifyOutlinedIcon from '@mui/icons-material/FormatAlignJustifyOutlined';
 import { useState, useEffect } from "react";
+import RootProvider from "./context/RootProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -117,8 +117,7 @@ export default function RootLayout({
             )}
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <Toolbar />
-
-              {children}
+                <RootProvider>{children}</RootProvider>
             </Box>
           </Box>
         </AppRouterCacheProvider>
