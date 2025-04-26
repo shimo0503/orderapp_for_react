@@ -1,0 +1,158 @@
+openapi: 3.0.0
+info:
+  title: instant order backend API
+  description: this is API design
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/product:
+    get:
+      tags:
+        - product
+      responses:
+        '200':
+          content:
+            application.json:
+              schema:
+                type: object
+    post:
+      tags:
+        - product
+      summary: Get products with condition (e.g. provided)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                provided:
+                  type: string
+      responses:
+        '200':
+          description: Filtered product list
+
+  /api/rest:
+    post:
+      tags:
+        - product
+      summary: Register or update product stock
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - rest
+              properties:
+                name:
+                  type: string
+                rest:
+                  type: integer
+      responses:
+        '200':
+          description: Stock registered
+
+  /api/Menu/new:
+    post:
+      tags:
+        - menu
+      summary: Create a new menu item
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                code:
+                  type: string
+                price:
+                  type: integer
+                rest:
+                  type: integer
+      responses:
+        '200':
+          description: Menu item created
+
+  /api/order/new:
+    post:
+      tags:
+        - menu
+      summary: Create new order (raw input, unclear format)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              example: "y"
+      responses:
+        '200':
+          description: Order created
+
+  /api/order/add:
+    post:
+      tags:
+        - menu
+      summary: Add detailed order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - table_number
+                - data
+              properties:
+                table_number:
+                  type: integer
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - quantity
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        '200':
+          description: Order added
+
+  /api/pay:
+    post:
+      tags:
+        - customer
+      summary: Pay for a table
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - table_number
+              properties:
+                table_number:
+                  type: integer
+      responses:
+        '200':
+          description: Payment processed
+
+  /api/customer:
+    get:
+      tags:
+        - customer
+      summary: Get all customers
+      responses:
+        '200':
+          description: List of customers

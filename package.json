@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen": "orval --config ./orval.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -14,7 +15,10 @@
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.2.0",
     "@mui/material-nextjs": "^6.4.3",
+    "@tanstack/react-query": "^5.74.4",
+    "axios": "^1.9.0",
     "next": "^15.1.7",
+    "orval": "^7.8.0",
     "postman-to-openapi": "^1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
