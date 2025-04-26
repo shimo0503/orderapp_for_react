@@ -15,6 +15,22 @@ paths:
             application.json:
               schema:
                 type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        code:
+                          type: string
+                        price:
+                          type: integer
+                        rest:
+                          type: integer
     post:
       tags:
         - product
@@ -27,10 +43,29 @@ paths:
               type: object
               properties:
                 provided:
-                  type: string
+                  type: boolean
       responses:
         '200':
-          description: Filtered product list
+          content:
+            application.json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        code:
+                          type: string
+                        price:
+                          type: integer
+                        rest:
+                          type: integer
 
   /api/rest:
     post:
@@ -52,8 +87,18 @@ paths:
                 rest:
                   type: integer
       responses:
-        '200':
-          description: Stock registered
+        '201':
+          description: success
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
+        '400':
+          description: failed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
 
   /api/Menu/new:
     post:
@@ -76,8 +121,18 @@ paths:
                 rest:
                   type: integer
       responses:
-        '200':
-          description: Menu item created
+        '201':
+          description: success
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
+        '400':
+          description: failed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
 
   /api/order/new:
     post:
@@ -92,8 +147,18 @@ paths:
               type: string
               example: "y"
       responses:
-        '200':
-          description: Order created
+        '201':
+          description: success
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
+        '400':
+          description: failed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
 
   /api/order/add:
     post:
@@ -125,8 +190,18 @@ paths:
                       quantity:
                         type: integer
       responses:
-        '200':
-          description: Order added
+        '201':
+          description: success
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
+        '400':
+          description: failed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
 
   /api/pay:
     post:
@@ -145,8 +220,18 @@ paths:
                 table_number:
                   type: integer
       responses:
-        '200':
-          description: Payment processed
+        '201':
+          description: success
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
+        '400':
+          description: failed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/registerSchema"
 
   /api/customer:
     get:
@@ -156,3 +241,32 @@ paths:
       responses:
         '200':
           description: List of customers
+          content:
+            application.json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        made_at: 
+                          type: string
+                        table_number:
+                          type: integer
+                        paycheck:
+                          type: boolean
+                        price:
+                          type: integer
+components:
+  schemas:
+    registerSchema:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: string

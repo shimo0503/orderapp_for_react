@@ -5,6 +5,7 @@
  * this is API design
  */
 
-export type PostApiProductBody = {
-  provided?: boolean;
-};
+export interface RegisterSchema {
+  status?: string;
+  data?: string;
+}

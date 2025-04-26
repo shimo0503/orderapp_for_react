@@ -5,6 +5,9 @@
  * this is API design
  */
 
-export type PostApiProductBody = {
-  provided?: boolean;
+export type PostApiProduct200DataItem = {
+  name?: string;
+  code?: string;
+  price?: number;
+  rest?: number;
 };

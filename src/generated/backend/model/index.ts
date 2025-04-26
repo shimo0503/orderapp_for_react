@@ -5,10 +5,16 @@
  * this is API design
  */
 
+export * from './getApiCustomer200';
+export * from './getApiCustomer200DataItem';
 export * from './getApiProduct200';
+export * from './getApiProduct200DataItem';
 export * from './postApiMenuNewBody';
 export * from './postApiOrderAddBody';
 export * from './postApiOrderAddBodyDataItem';
 export * from './postApiPayBody';
+export * from './postApiProduct200';
+export * from './postApiProduct200DataItem';
 export * from './postApiProductBody';
 export * from './postApiRestBody';
+export * from './registerSchema';

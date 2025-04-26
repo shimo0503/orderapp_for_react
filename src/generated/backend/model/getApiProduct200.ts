@@ -4,5 +4,9 @@
  * instant order backend API
  * this is API design
  */
+import type { GetApiProduct200DataItem } from './getApiProduct200DataItem';
 
-export type GetApiProduct200 = { [key: string]: unknown };
+export type GetApiProduct200 = {
+  status?: string;
+  data?: GetApiProduct200DataItem[];
+};

@@ -9,9 +9,14 @@ import {
   useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
+  QueryClient,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -26,7 +31,9 @@ import type {
 } from 'axios';
 
 import type {
-  PostApiPayBody
+  GetApiCustomer200,
+  PostApiPayBody,
+  RegisterSchema
 } from '.././model';
 
 
@@ -38,7 +45,7 @@ import type {
  */
 export const postApiPay = (
     postApiPayBody: PostApiPayBody, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<RegisterSchema>> => {
     
     const formData = new FormData();
 formData.append('table_number', postApiPayBody.table_number.toString())
@@ -51,7 +58,7 @@ formData.append('table_number', postApiPayBody.table_number.toString())
 
 
 
-export const getPostApiPayMutationOptions = <TError = AxiosError<unknown>,
+export const getPostApiPayMutationOptions = <TError = AxiosError<RegisterSchema>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, axios?: AxiosRequestConfig}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext> => {
     
@@ -78,14 +85,14 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type PostApiPayMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPay>>>
     export type PostApiPayMutationBody = PostApiPayBody
-    export type PostApiPayMutationError = AxiosError<unknown>
+    export type PostApiPayMutationError = AxiosError<RegisterSchema>
 
     /**
  * @summary Pay for a table
  */
-export const usePostApiPay = <TError = AxiosError<unknown>,
+export const usePostApiPay = <TError = AxiosError<RegisterSchema>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPay>>, TError,{data: PostApiPayBody}, TContext>, axios?: AxiosRequestConfig}
- ): UseMutationResult<
+ , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiPay>>,
         TError,
         {data: PostApiPayBody},
@@ -94,14 +101,14 @@ export const usePostApiPay = <TError = AxiosError<unknown>,
 
       const mutationOptions = getPostApiPayMutationOptions(options);
 
-      return useMutation(mutationOptions );
+      return useMutation(mutationOptions , queryClient);
     }
     /**
  * @summary Get all customers
  */
 export const getApiCustomer = (
      options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
+ ): Promise<AxiosResponse<GetApiCustomer200>> => {
     
     
     return axios.get(
@@ -115,7 +122,7 @@ export const getGetApiCustomerQueryKey = () => {
     }
 
     
-export const getGetApiCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>, axios?: AxiosRequestConfig}
+export const getGetApiCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
@@ -130,25 +137,49 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
 export type GetApiCustomerQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCustomer>>>
 export type GetApiCustomerQueryError = AxiosError<unknown>
 
 
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCustomer>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCustomer>>
+        > , 'initialData'
+      >, axios?: AxiosRequestConfig}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiCustomer>>,
+          TError,
+          Awaited<ReturnType<typeof getApiCustomer>>
+        > , 'initialData'
+      >, axios?: AxiosRequestConfig}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get all customers
  */
 
 export function useGetApiCustomer<TData = Awaited<ReturnType<typeof getApiCustomer>>, TError = AxiosError<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>, axios?: AxiosRequestConfig}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCustomer>>, TError, TData>>, axios?: AxiosRequestConfig}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiCustomerQueryOptions(options)
 
-  const query = useQuery(queryOptions ) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
