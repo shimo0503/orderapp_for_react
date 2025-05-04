@@ -1,41 +1,42 @@
 'use client'
-
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Box, Button, ListItem, TextField, Typography } from "@mui/material"
-import { usePostApiMenuNew } from "@/generated/backend/menu/menu"
-import { PostApiMenuNewBody } from "@/generated/backend/model"
+import { Box, Button, ListItem, Stack, TextField } from "@mui/material"
+import { useGetApiProduct, usePostApiRest } from "@/generated/backend/product/product"
+import { PostApiRestBody } from "@/generated/backend/model"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 
 // スキーマ
 const Schema = z.object({
     name: z.string().min(1, '1文字以上入力してください。'),
-    price: z.number().min(1, '1文字以上入力してください。'),
+    rest: z.number().min(1, '1文字以上入力してください。'),
 })
+
 type params = z.infer<typeof Schema>
 
 const AddMenu = () => {
-    const { data, mutate, isPending } = usePostApiMenuNew()
+    const { data } = useGetApiProduct()
+    const { mutate, isPending, isError} = usePostApiRest()
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(Schema)
     })
-    const handleSubmitPost: SubmitHandler<params> = (formData:PostApiMenuNewBody ) => {
+    const handleSubmitPost: SubmitHandler<params> = (formData:PostApiRestBody ) => {
         mutate(
             {
                 data: {
                     name: formData.name,
-                    price: formData.price
+                    rest: formData.rest
                 }
             },
             {
-                onError: (error) => [
+                onError: (error) => {
                     console.log(error)
-                ]
+                }
             }
         )
     }
     return (
-        <Box>
+        <Stack>
             <Box
                 component='form'
                 onSubmit={(handleSubmit(handleSubmitPost))}
@@ -48,27 +49,32 @@ const AddMenu = () => {
                         gap: 1
                     }}
                 >
-                    <TextField
-                        label='商品名'
+                    <Box
+                        component='select'
                         {...register('name')}
-                        variant='outlined'
-                        placeholder='商品名を入力してください'
-                        error={!!errors.name?.message}
-                        helperText={errors.name?.message}
-                        sx= {{
+                        sx={{
+                            width: '220px',
+                            height: '60px',
+                            fontSize: '20px',
+                            borderRadius: '4px',
                             ml: 1,
-                            mr: 1
+                            mr: 1,
                         }}
                     >
-                    </TextField>
+                    {data?.data?.map((product, index) => {
+                        return <option key={index}value={product.name}>{product.name}</option>
+                    })}
+
+                    </Box>
                     <TextField
-                        label='値段'
-                        {...register('price', { valueAsNumber: true })}
+                        label='残数'
+                        {...register('rest', { valueAsNumber: true })}
                         variant='outlined'
-                        placeholder='値段を入力してください'
-                        error={!!errors.price?.message}
-                        helperText={errors.price?.message}
+                        placeholder='残数を入力してください'
+                        error={!!errors.rest?.message}
+                        helperText={errors.rest?.message}
                         sx= {{
+                            width: '220px',
                             ml: 1,
                             mr: 1
                         }}
@@ -90,11 +96,13 @@ const AddMenu = () => {
                 </Button>
             </Box>
             {isPending ? (
-                <Typography variant='h2'>送信中</Typography>
+                <Box sx={{color: 'red'}}>送信中</Box>
+            ) : isError ? (
+                <Box sx={{color: 'red'}}>残数の登録に失敗しました。</Box>
             ) : (
-                <Typography>{data?.data}</Typography>
+                <Box>残数の登録に成功しました。</Box>
             )}
-        </Box>
+        </Stack>
     )
 }
 
