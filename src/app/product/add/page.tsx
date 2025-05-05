@@ -1,49 +1,49 @@
 'use client'
+
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Box, Button, ListItem, Stack, TextField } from "@mui/material"
-import { useGetApiProduct, usePostApiRest } from "@/generated/backend/product/product"
-import { PostApiRestBody } from "@/generated/backend/model"
+import { Box, Button, ListItem, TextField } from "@mui/material"
+import { usePostApiMenuNew } from "@/generated/backend/menu/menu"
+import { PostApiMenuNewBody } from "@/generated/backend/model"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import Header from "@/components/Header"
+import { AxiosError } from "axios"
 
-//ヘッダー情報
+// ヘッダー
 const headerData = {
-    title: "残数登録",
-    description: "商品が今いくつ残っているかを登録できます。"
+    title: "メニュー追加",
+    description: "まだ登録されていないメニューを追加します。残数は0で設定されるので、残数登録は残数登録ページで行ってください。"
 }
 
 // スキーマ
 const Schema = z.object({
     name: z.string().min(1, '1文字以上入力してください。'),
-    rest: z.number().min(1, '1文字以上入力してください。'),
+    price: z.number().min(1, '1文字以上入力してください。'),
 })
-
 type params = z.infer<typeof Schema>
 
-const AddMenu = () => {
-    const { data } = useGetApiProduct()
-    const { data: result, mutate, isPending, isError} = usePostApiRest()
+const Add = () => {
+    const { data, mutate, isPending, error } = usePostApiMenuNew()
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(Schema)
     })
-    const handleSubmitPost: SubmitHandler<params> = (formData:PostApiRestBody ) => {
+    const handleSubmitPost: SubmitHandler<params> = (formData:PostApiMenuNewBody ) => {
         mutate(
             {
                 data: {
                     name: formData.name,
-                    rest: formData.rest
+                    price: formData.price
                 }
             },
             {
-                onError: (error) => {
+                onError: (error) => [
                     console.log(error)
-                }
+                ]
             }
         )
     }
     return (
-        <Stack>
+        <Box>
             <Header title={headerData.title} description={headerData.description}/>
             <Box
                 component='form'
@@ -57,32 +57,27 @@ const AddMenu = () => {
                         gap: 1
                     }}
                 >
-                    <Box
-                        component='select'
+                    <TextField
+                        label='商品名'
                         {...register('name')}
-                        sx={{
-                            width: '220px',
-                            height: '60px',
-                            fontSize: '20px',
-                            borderRadius: '4px',
+                        variant='outlined'
+                        placeholder='商品名を入力してください'
+                        error={!!errors.name?.message}
+                        helperText={errors.name?.message}
+                        sx= {{
                             ml: 1,
-                            mr: 1,
+                            mr: 1
                         }}
                     >
-                    {data?.data?.map((product, index) => {
-                        return <option key={index} value={product.name}>{product.name}</option>
-                    })}
-
-                    </Box>
+                    </TextField>
                     <TextField
-                        label='残数'
-                        {...register('rest', { valueAsNumber: true })}
+                        label='値段'
+                        {...register('price', { valueAsNumber: true })}
                         variant='outlined'
-                        placeholder='残数を入力してください'
-                        error={!!errors.rest?.message}
-                        helperText={errors.rest?.message}
+                        placeholder='値段を入力してください'
+                        error={!!errors.price?.message}
+                        helperText={errors.price?.message}
                         sx= {{
-                            width: '220px',
                             ml: 1,
                             mr: 1
                         }}
@@ -104,14 +99,18 @@ const AddMenu = () => {
                 </Button>
             </Box>
             {isPending ? (
-                <Box sx={{color: 'red'}}>送信中</Box>
-            ) : isError ? (
-                <Box sx={{color: 'red'}}>残数の登録に失敗しました。</Box>
+                <Box>送信中</Box>
+            ) : error ? (
+                <Box>
+                    {
+                        (error as AxiosError<{ data: string }>)?.response?.data?.data ?? 'エラーが発生しました'
+                    }
+                </Box>
             ) : (
-                <Box>{result?.data}</Box>
+                <Box>{data?.data}</Box>
             )}
-        </Stack>
+        </Box>
     )
 }
 
-export default AddMenu
+export default Add
