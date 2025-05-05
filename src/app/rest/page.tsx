@@ -5,6 +5,13 @@ import { useGetApiProduct, usePostApiRest } from "@/generated/backend/product/pr
 import { PostApiRestBody } from "@/generated/backend/model"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
+import Header from "@/components/Header"
+
+//ヘッダー情報
+const headerData = {
+    title: "残数登録",
+    description: "商品が今いくつ残っているかを登録できます。"
+}
 
 // スキーマ
 const Schema = z.object({
@@ -16,7 +23,7 @@ type params = z.infer<typeof Schema>
 
 const AddMenu = () => {
     const { data } = useGetApiProduct()
-    const { mutate, isPending, isError} = usePostApiRest()
+    const { data: result, mutate, isPending, isError} = usePostApiRest()
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(Schema)
     })
@@ -37,6 +44,7 @@ const AddMenu = () => {
     }
     return (
         <Stack>
+            <Header title={headerData.title} description={headerData.description}/>
             <Box
                 component='form'
                 onSubmit={(handleSubmit(handleSubmitPost))}
@@ -62,7 +70,7 @@ const AddMenu = () => {
                         }}
                     >
                     {data?.data?.map((product, index) => {
-                        return <option key={index}value={product.name}>{product.name}</option>
+                        return <option key={index} value={product.name}>{product.name}</option>
                     })}
 
                     </Box>
@@ -100,7 +108,7 @@ const AddMenu = () => {
             ) : isError ? (
                 <Box sx={{color: 'red'}}>残数の登録に失敗しました。</Box>
             ) : (
-                <Box>残数の登録に成功しました。</Box>
+                <Box>{result?.data}</Box>
             )}
         </Stack>
     )

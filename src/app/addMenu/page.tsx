@@ -1,11 +1,19 @@
 'use client'
 
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Box, Button, ListItem, TextField, Typography } from "@mui/material"
+import { Box, Button, ListItem, TextField } from "@mui/material"
 import { usePostApiMenuNew } from "@/generated/backend/menu/menu"
 import { PostApiMenuNewBody } from "@/generated/backend/model"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
+import Header from "@/components/Header"
+import { AxiosError } from "axios"
+
+// ヘッダー
+const headerData = {
+    title: "メニュー追加",
+    description: "まだ登録されていないメニューを追加します。残数は0で設定されるので、残数登録は残数登録ページで行ってください。"
+}
 
 // スキーマ
 const Schema = z.object({
@@ -15,7 +23,7 @@ const Schema = z.object({
 type params = z.infer<typeof Schema>
 
 const AddMenu = () => {
-    const { data, mutate, isPending } = usePostApiMenuNew()
+    const { data, mutate, isPending, error } = usePostApiMenuNew()
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(Schema)
     })
@@ -36,6 +44,7 @@ const AddMenu = () => {
     }
     return (
         <Box>
+            <Header title={headerData.title} description={headerData.description}/>
             <Box
                 component='form'
                 onSubmit={(handleSubmit(handleSubmitPost))}
@@ -90,9 +99,15 @@ const AddMenu = () => {
                 </Button>
             </Box>
             {isPending ? (
-                <Typography variant='h2'>送信中</Typography>
+                <Box>送信中</Box>
+            ) : error ? (
+                <Box>
+                    {
+                        (error as AxiosError<{ data: string }>)?.response?.data?.data ?? 'エラーが発生しました'
+                    }
+                </Box>
             ) : (
-                <Typography>{data?.data}</Typography>
+                <Box>{data?.data}</Box>
             )}
         </Box>
     )
