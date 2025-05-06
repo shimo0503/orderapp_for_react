@@ -7,6 +7,10 @@
 
 export * from './getApiCustomer200';
 export * from './getApiCustomer200DataItem';
+export * from './getApiOrderGet200';
+export * from './getApiOrderGet200DataItem';
+export * from './getApiOrderGet200DataItemCustomer';
+export * from './getApiOrderGet200DataItemProduct';
 export * from './getApiProduct200';
 export * from './getApiProduct200DataItem';
 export * from './postApiMenuNewBody';

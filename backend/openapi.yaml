@@ -261,6 +261,80 @@ paths:
                           type: boolean
                         price:
                           type: integer
+  /api/order/get:
+    get:
+      summary: Get all customer product orders
+      tags:
+        - menu
+      description: Returns a list of all customer orders with nested customer and product details.
+      responses:
+        '200':
+          description: A list of customer orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "200"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 7
+                        made_at:
+                          type: string
+                          format: date-time
+                        quantity:
+                          type: integer
+                          example: 2
+                        provided:
+                          type: boolean
+                          example: false
+                        customer:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 14
+                            made_at:
+                              type: string
+                              format: date-time
+                            table_number:
+                              type: integer
+                              example: 5
+                            paycheck:
+                              type: boolean
+                              example: false
+                            price:
+                              type: integer
+                              example: 1500
+                            products:
+                              type: array
+                              items:
+                                type: integer
+                        product:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 2
+                            name:
+                              type: string
+                              example: "Pizza"
+                            code:
+                              type: string
+                              example: "PZ001"
+                            price:
+                              type: integer
+                              example: 800
+                            rest:
+                              type: integer
+                              example: 12
 components:
   schemas:
     registerSchema:
