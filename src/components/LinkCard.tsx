@@ -1,5 +1,4 @@
 import { Card, CardHeader } from "@mui/material"
-import { red } from "@mui/material/colors"
 import Link from "next/link"
 
 type LinkCardProps = {
