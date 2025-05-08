@@ -335,6 +335,51 @@ paths:
                             rest:
                               type: integer
                               example: 12
+  /api/provide:
+    post:
+      summary: Toggle provided status
+      description: This endpoint toggles the `provided` status of a `CustomerProduct` by name.
+      tags:
+        - product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the customer product.
+              required:
+                - name
+      responses:
+        '201':
+          description: Success response. Product status was toggled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "201"
+                  data:
+                    type: string
+                    example: "success"
+        '400':
+          description: Bad request. The product could not be found or input was invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "400"
+                  data:
+                    type: string
+                    example: "Request Error."
 components:
   schemas:
     registerSchema:

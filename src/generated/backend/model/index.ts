@@ -20,5 +20,8 @@ export * from './postApiPayBody';
 export * from './postApiProduct200';
 export * from './postApiProduct200DataItem';
 export * from './postApiProductBody';
+export * from './postApiProvide201';
+export * from './postApiProvide400';
+export * from './postApiProvideBody';
 export * from './postApiRestBody';
 export * from './registerSchema';

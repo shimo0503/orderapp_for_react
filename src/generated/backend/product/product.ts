@@ -27,6 +27,9 @@ import type {
   GetApiProduct200,
   PostApiProduct200,
   PostApiProductBody,
+  PostApiProvide201,
+  PostApiProvide400,
+  PostApiProvideBody,
   PostApiRestBody,
   RegisterSchema
 } from '.././model';
@@ -251,6 +254,71 @@ export const usePostApiRest = <TError = RegisterSchema,
       > => {
 
       const mutationOptions = getPostApiRestMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    /**
+ * This endpoint toggles the `provided` status of a `CustomerProduct` by name.
+ * @summary Toggle provided status
+ */
+export const postApiProvide = (
+    postApiProvideBody: PostApiProvideBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PostApiProvide201>(
+      {url: `/api/provide`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postApiProvideBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiProvideMutationOptions = <TError = PostApiProvide400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProvide>>, TError,{data: PostApiProvideBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiProvide>>, TError,{data: PostApiProvideBody}, TContext> => {
+    
+const mutationKey = ['postApiProvide'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiProvide>>, {data: PostApiProvideBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiProvide(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiProvideMutationResult = NonNullable<Awaited<ReturnType<typeof postApiProvide>>>
+    export type PostApiProvideMutationBody = PostApiProvideBody
+    export type PostApiProvideMutationError = PostApiProvide400
+
+    /**
+ * @summary Toggle provided status
+ */
+export const usePostApiProvide = <TError = PostApiProvide400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiProvide>>, TError,{data: PostApiProvideBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiProvide>>,
+        TError,
+        {data: PostApiProvideBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiProvideMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
