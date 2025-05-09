@@ -380,6 +380,29 @@ paths:
                   data:
                     type: string
                     example: "Request Error."
+  /api/sales:
+    get:
+      summary: 売上データを取得
+      description: データベースに保存されている売上情報をすべて取得します。
+      tags:
+        - customer
+      responses:
+        '200':
+          description: 正常に売上データを取得
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "200"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Sale'
+        '500':
+          description: サーバーエラー
 components:
   schemas:
     registerSchema:
@@ -389,3 +412,16 @@ components:
           type: string
         data:
           type: string
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date-time
+          example: "2025-05-09T12:34:56Z"
+        price:
+          type: integer
+          example: 1000
