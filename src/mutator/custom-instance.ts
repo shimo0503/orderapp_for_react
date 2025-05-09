@@ -14,7 +14,7 @@ export const customInstance = <T>(
         cancelToken: source.token,
     }).then(({ data }) => data);
 
-    // @ts-ignore
+    // @ts-expect-error: Promise
     promise.cancel = () => {
         source.cancel('クエリはキャンセルされました');
     };
