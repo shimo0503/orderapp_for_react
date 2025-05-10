@@ -10,7 +10,7 @@ const Menu = (props: menuProps) => {
     const name = props.name
     const rest = props.rest
     const price = props.price
-    if (name && rest && price) {
+    if (name && price) {
         return (
             <Paper
                 elevation={5}
