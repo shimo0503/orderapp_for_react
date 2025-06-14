@@ -1,7 +1,14 @@
 # instant-order
 ## 概要
 試しに自分で飲食店を出してみたい人向けに、簡単に注文・会計・売上参照ができる注文アプリを作成しました。https://instant-order.duckdns.org/ にデプロイしております。現在はこのドメインで共通のメニュー・共通の注文ですが、今後はユーザ登録機能を実装して、ユーザごとにメニューや注文を分けたいという構想を持っております。
-
+## 各ソースコード
+### 初回
+- https://github.com/shimo0503/orderapp
+### フロントエンド改修後
+- バックエンド: https://github.com/shimo0503/orderapp/tree/main-api
+- フロントエンド: 本リポジトリ
+### バックエンド改修(現在進行中)
+- https://github.com/shimo0503/instant-order
 ## 使用技術
 - フロントエンド
   - Next.js
